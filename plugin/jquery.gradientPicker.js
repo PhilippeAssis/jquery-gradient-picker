@@ -45,17 +45,20 @@
 		var $preview = $("<canvas class='gradientPicker-preview'></canvas>");
 		this.$el.append($preview);
 		var canvas = $preview[0];
-		canvas.width = canvas.clientWidth;
-		canvas.height = canvas.clientHeight;
+		canvas.width = this.$el.width();
+		canvas.height = this.$el.height();
 		this.g2d = canvas.getContext("2d");
 
 		var $ctrlPtContainer = $("<div class='gradientPicker-ctrlPts'></div>");
 		this.$el.append($ctrlPtContainer)
 		this.$ctrlPtContainer = $ctrlPtContainer;
 
+		this.$ctrlPtContainer.width(canvas.width)
+
 		this.updatePreview = bind(this.updatePreview, this);
 		this.controlPoints = [];
 		this.ctrlPtConfig = new ControlPtConfig(this.$el, opts);
+
 		for (var i = 0; i < opts.controlPoints.length; ++i) {
 			var ctrlPt = this.createCtrlPt(opts.controlPoints[i]);
 			this.controlPoints.push(ctrlPt);
@@ -187,10 +190,11 @@
 			var pxTop = ($parentEl.height() - this.$el.outerHeight()) * (this.position);
 			this.$el.css("top", pxTop);
 		}
-		
+
 		this.drag = bind(this.drag, this);
 		this.stop = bind(this.stop, this);
 		this.clicked = bind(this.clicked, this);
+
 		this.colorChanged = bind(this.colorChanged, this);
 		this.$el.draggable({
 			axis: (orientation == "horizontal") ? "x" : "y",
@@ -244,9 +248,12 @@
 
 		this.colorChanged = bind(this.colorChanged, this);
 		this.removeClicked = bind(this.removeClicked, this);
+
 		$cpicker.ColorPicker({
+			color: '#000000',
 			onChange: this.colorChanged
 		});
+
 		this.$cpicker = $cpicker;
 		this.opts = opts;
 		this.visible = false;
@@ -294,7 +301,7 @@
 	var methods = {
 		init: function(opts) {
 			opts = $.extend({
-				controlPoints: ["#FFF 0%", "#000 100%"],
+				controlPoints: ["#FFFFFF 0%", "#000000 100%"],
 				orientation: "horizontal",
 				type: "linear",
 				fillDirection: "left",
